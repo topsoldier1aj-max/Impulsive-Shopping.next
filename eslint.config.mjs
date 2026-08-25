@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Read-only reference copy of the original project (see README) — not part of this app.
+    "archive/**",
   ]),
 ]);
 
