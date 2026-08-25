@@ -48,6 +48,14 @@ export function Header() {
         >
           Products
         </Link>
+        {user && (
+          <Link
+            href="/orders"
+            className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
+          >
+            Orders
+          </Link>
+        )}
       </nav>
 
       <div className="flex items-center gap-3">

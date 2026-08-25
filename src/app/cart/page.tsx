@@ -4,13 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
+import { useOrders } from "@/lib/order-context";
+import { useAuth } from "@/lib/auth-context";
 import { getProductById } from "@/lib/fixtures/products";
 
 // Ported from the original Cart.vue's role, but built against the client-side
-// cart context instead of the /cart + /cart_items API. Checkout is a stubbed
-// confirmation step per the handoff doc, not a real order — see below.
+// cart context instead of the /cart + /cart_items API. Checkout creates a
+// mock order (see order-context.tsx) instead of a real one — no payment is
+// taken and nothing is written to a backend.
 export default function CartPage() {
   const { lines, setQuantity, removeItem, clear, totalPrice } = useCart();
+  const { createOrder } = useOrders();
+  const { user } = useAuth();
   const [checkedOut, setCheckedOut] = useState(false);
 
   const rows = lines
@@ -22,15 +27,23 @@ export default function CartPage() {
       <div className="mx-auto flex max-w-lg flex-col items-center gap-4 px-6 py-24 text-center">
         <h1 className="text-2xl font-semibold text-zinc-900">Order confirmed 🎉</h1>
         <p className="text-zinc-600">
-          This is a demo checkout — no payment was taken and no real order was
-          created. Phase 1 stubs checkout as a fake confirmation step.
+          This is a demo checkout — no payment was taken. A mock order was
+          added to your order history so you can see the flow end to end.
         </p>
-        <Link
-          href="/products"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white hover:bg-zinc-700"
-        >
-          Continue shopping
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/orders"
+            className="rounded-lg border border-zinc-900 px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-100"
+          >
+            View order history
+          </Link>
+          <Link
+            href="/products"
+            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            Continue shopping
+          </Link>
+        </div>
       </div>
     );
   }
@@ -105,6 +118,15 @@ export default function CartPage() {
 
       <button
         onClick={() => {
+          createOrder(
+            user?.user_id ?? "guest",
+            rows.map(({ line, product }) => ({
+              item_id: line.item_id,
+              name: product!.name,
+              quantity: line.quantity,
+              price: product!.price,
+            }))
+          );
           clear();
           setCheckedOut(true);
         }}

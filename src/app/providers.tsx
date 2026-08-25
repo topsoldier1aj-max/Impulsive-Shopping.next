@@ -3,11 +3,14 @@
 import type { ReactNode } from "react";
 import { AuthProvider } from "@/lib/auth-context";
 import { CartProvider } from "@/lib/cart-context";
+import { OrderProvider } from "@/lib/order-context";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      <CartProvider>{children}</CartProvider>
+      <OrderProvider>
+        <CartProvider>{children}</CartProvider>
+      </OrderProvider>
     </AuthProvider>
   );
 }
