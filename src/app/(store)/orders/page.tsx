@@ -26,7 +26,7 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="mx-auto flex max-w-lg flex-col items-center gap-4 px-6 py-24 text-center">
+      <div className="mx-auto flex max-w-lg flex-col items-center gap-4 px-6 pt-[140px] pb-24 text-center">
         <h1 className="text-2xl font-semibold text-zinc-900">No orders yet</h1>
         <p className="text-zinc-600">Orders placed through checkout will show up here.</p>
         <Link
@@ -40,7 +40,7 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 py-10">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 pt-[100px] pb-10">
       <h1 className="text-2xl font-semibold text-zinc-900">Order History</h1>
 
       <div className="flex flex-col gap-3">

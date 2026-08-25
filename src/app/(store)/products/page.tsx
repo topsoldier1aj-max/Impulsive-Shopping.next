@@ -1,18 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { categories } from "@/lib/fixtures/categories";
 import { products } from "@/lib/fixtures/products";
 import { ProductCard } from "@/components/ProductCard";
 
 // Ported from Products.vue + CatergoryCards.vue: category filter buttons,
-// a search box, and a card grid. The snake-game discount banner and
-// admin "+ New Product" affordance from the original didn't make the cut
-// for this pass — see the handoff doc's trimmed scope.
+// a search box, and a card grid, using the original's colors (border #ddd,
+// active #111) instead of a Tailwind neutral. The snake-game discount
+// banner and admin "+ New Product" affordance from the original didn't
+// make the cut — see the handoff doc's trimmed scope.
 const ALL = "ALL";
 
 export default function ProductsPage() {
-  const [activeCategory, setActiveCategory] = useState(ALL);
+  return (
+    <Suspense>
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+
+function ProductsPageContent() {
+  const searchParams = useSearchParams();
+  const [activeCategory, setActiveCategory] = useState(searchParams.get("category") ?? ALL);
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -28,20 +39,20 @@ export default function ProductsPage() {
   }, [activeCategory, search]);
 
   return (
-    <div className="flex flex-col gap-8 px-6 py-8 sm:px-10">
+    <div className="flex flex-col gap-8 px-6 pt-[100px] pb-10 sm:px-10">
       <div>
-        <h1 className="text-3xl font-semibold text-zinc-900">Products</h1>
-        <p className="text-zinc-600">Pick a category below</p>
+        <h1 className="m-0 text-3xl font-semibold">Products</h1>
+        <p className="mt-1 text-base">Pick Which Category Below</p>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5">
           <button
             onClick={() => setActiveCategory(ALL)}
             className={`rounded-xl border px-3.5 py-2 text-sm ${
               activeCategory === ALL
-                ? "border-zinc-900 bg-zinc-900 text-white"
-                : "border-zinc-300 bg-white text-zinc-900"
+                ? "border-[#111] bg-[#111] text-white"
+                : "border-[#ddd] bg-white text-[#111]"
             }`}
           >
             All
@@ -52,8 +63,8 @@ export default function ProductsPage() {
               onClick={() => setActiveCategory(category.category_id)}
               className={`rounded-xl border px-3.5 py-2 text-sm ${
                 activeCategory === category.category_id
-                  ? "border-zinc-900 bg-zinc-900 text-white"
-                  : "border-zinc-300 bg-white text-zinc-900"
+                  ? "border-[#111] bg-[#111] text-white"
+                  : "border-[#ddd] bg-white text-[#111]"
               }`}
             >
               {category.name}
@@ -61,13 +72,15 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search products..."
-          className="w-64 rounded-xl border border-zinc-300 px-3 py-2 text-sm"
-        />
+        <div className="flex gap-2.5">
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search products..."
+            className="w-64 rounded-xl border border-[#ddd] px-3 py-2 text-sm"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,250px))] justify-center gap-7">

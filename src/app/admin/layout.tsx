@@ -37,15 +37,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col sm:flex-row">
-      <aside className="flex w-full flex-row gap-2 bg-zinc-900 p-4 sm:w-60 sm:flex-col sm:gap-1 sm:p-6">
+    <div className="flex min-h-screen flex-1 flex-col sm:flex-row">
+      {/* Colors match AdminSidebar.vue's Bootstrap bg-dark (#212529),
+          hover (#495057), and active-pill (#0d6efd) exactly. */}
+      <aside className="flex w-full flex-row gap-2 bg-[#212529] p-4 sm:w-[260px] sm:flex-col sm:gap-1 sm:p-6">
         <h4 className="hidden text-center font-bold text-white sm:mb-4 sm:block">Admin Panel</h4>
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={`rounded-lg px-3 py-2 text-sm text-white ${
-              pathname.startsWith(item.href) ? "bg-blue-600" : "hover:bg-zinc-700"
+              pathname.startsWith(item.href) ? "bg-[#0d6efd]" : "hover:bg-[#495057]"
             }`}
           >
             {item.label}
@@ -53,7 +55,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         ))}
         <Link
           href="/"
-          className="mt-auto rounded-lg border border-zinc-600 px-3 py-2 text-center text-sm text-white hover:bg-zinc-700"
+          className="mt-auto rounded-lg border border-zinc-500 px-3 py-2 text-center text-sm text-white hover:bg-[#495057]"
         >
           ← Back to Store
         </Link>

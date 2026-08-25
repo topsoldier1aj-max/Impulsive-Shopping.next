@@ -21,7 +21,7 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 py-10 sm:flex-row">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pt-[100px] pb-10 sm:flex-row">
       <Image
         src={product.photo}
         alt={product.name}

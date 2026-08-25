@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 
-// Ported from the original Header.vue: fixed nav that hides on scroll-down,
-// reappears on scroll-up. Auth here is Phase 1's mocked/fake session, not a
-// real login — see src/lib/auth-context.tsx.
+// Ported from the original Header.vue as closely as Tailwind allows: fully
+// transparent (it floats over the Hero on the home page), fixed, hides on
+// scroll-down/reappears on scroll-up, and uses the original's exact
+// black/#040404 + light-grey/#E7E7E7 palette rather than a Tailwind neutral.
 export function Header() {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -27,52 +28,28 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 z-50 flex h-[70px] w-full items-center justify-between border-b border-black/5 bg-white/90 px-5 backdrop-blur transition-[top] duration-300 ${
+      className={`fixed left-0 z-50 flex h-[70px] w-full items-center justify-between bg-transparent px-5 text-[#040404] transition-[top] duration-300 ${
         visible ? "top-0" : "-top-20"
       }`}
     >
-      <Link href="/" className="flex items-center gap-2 font-bold text-zinc-900">
-        Impulsive Shopping
+      <Link href="/" className="flex items-center gap-2 font-bold">
+        <span aria-hidden>👁</span> Impulsive Shopping
       </Link>
 
-      <nav className="hidden items-center gap-2 sm:flex">
-        <Link
-          href="/"
-          className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
-        >
-          Home
-        </Link>
-        <Link
-          href="/products"
-          className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
-        >
-          Products
-        </Link>
-        {user && (
-          <Link
-            href="/orders"
-            className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
-          >
-            Orders
-          </Link>
-        )}
-        {user?.role === "admin" && (
-          <Link
-            href="/admin"
-            className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
-          >
-            Admin
-          </Link>
-        )}
+      <nav className="hidden items-center gap-2.5 sm:flex">
+        <NavPill href="/">Home</NavPill>
+        <NavPill href="/products">Products</NavPill>
+        {user && <NavPill href="/orders">Orders</NavPill>}
+        {user?.role === "admin" && <NavPill href="/admin">Admin</NavPill>}
       </nav>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-5">
         <Link
           href="/cart"
           aria-label="Go to cart"
-          className="relative inline-flex items-center justify-center rounded-md bg-zinc-900 px-3 py-2 text-zinc-50 hover:bg-zinc-100 hover:text-zinc-900"
+          className="relative inline-flex items-center justify-center rounded-[5px] bg-[#040404] p-2.5 text-[#e7e7e7] transition-colors hover:bg-[#e7e7e7] hover:text-[#040404]"
         >
-          Cart
+          🛒
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white">
               {totalItems}
@@ -81,27 +58,27 @@ export function Header() {
         </Link>
 
         {user ? (
-          <div className="flex items-center gap-2">
-            <span className="hidden text-sm text-zinc-600 sm:inline">{user.name}</span>
+          <div className="flex items-center gap-2.5">
+            <span className="hidden text-sm sm:inline">{user.name}</span>
             <button
               onClick={logout}
-              className="rounded-md bg-red-700 px-3 py-2 text-sm text-white hover:bg-black"
+              className="rounded-[5px] bg-[#b00020] px-3.5 py-2 text-sm text-white transition-colors hover:bg-[#040404] hover:text-[#e7e7e7]"
             >
               Logout
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={loginAsCustomer}
-              className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-zinc-50 hover:bg-zinc-700"
+              className="rounded-[5px] bg-[#040404] px-3.5 py-2 text-sm text-[#e7e7e7] transition-colors hover:bg-[#e7e7e7] hover:text-[#040404]"
             >
               Login
             </button>
             <button
               onClick={loginAsAdmin}
-              className="hidden rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 hover:bg-zinc-100 sm:inline-block"
               title="Demo: sign in with an admin role"
+              className="hidden rounded-[5px] bg-[#040404] px-3.5 py-2 text-sm text-[#e7e7e7] transition-colors hover:bg-[#e7e7e7] hover:text-[#040404] sm:inline-block"
             >
               Admin demo
             </button>
@@ -109,5 +86,16 @@ export function Header() {
         )}
       </div>
     </header>
+  );
+}
+
+function NavPill({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="rounded-[10px] bg-[#e7e7e7] px-3 py-1.5 text-sm text-[#040404] transition-colors hover:bg-[#040404] hover:text-[#e7e7e7]"
+    >
+      {children}
+    </Link>
   );
 }
