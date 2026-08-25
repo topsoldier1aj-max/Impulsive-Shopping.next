@@ -56,6 +56,14 @@ export function Header() {
             Orders
           </Link>
         )}
+        {user?.role === "admin" && (
+          <Link
+            href="/admin"
+            className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50"
+          >
+            Admin
+          </Link>
+        )}
       </nav>
 
       <div className="flex items-center gap-3">
